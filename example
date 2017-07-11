@@ -1,0 +1,58 @@
+#'Install package "UsingR" so we can choose our quantitative values 
+#'because linear regression can not be applied at qualitative values
+install.packages("UsingR")
+
+#'Import Library
+library(UsingR)
+
+#'Import data
+data(mtcars)
+head(mtcars)
+
+#'Seperate our quantitative columns for each axis, using variables "x" and "y"
+x = mtcars$wt 
+y = mtcars$mpg 
+
+#'Set a variable for the Fitting Linear Model (see ?lm())
+fit = lm(y ~ x)
+
+#'Plot the linear model
+plot(x,y,xlab='Weight (1000lb)',ylab='MPG')
+
+#'Add linear model's line and color it red
+abline(fit,col="red")
+#'Note: Now, with just that, we can discuss how our two variables correlate but we need more data if we want to go one step further
+
+#'Next up we print our coefficient values, so we can present our resault using values
+coef(fit)
+
+#'Calculate Predictions
+est = predict(fit,data.frame(x))
+
+#'Again, plot model line and this time we add predictions
+plot(x,y,xlab='Weight (1000lb)',ylab='MPG')
+abline(fit,col="red")
+points(x,est,col="blue",pch=3)
+#'At this point we can discuss what would our resaults would look like if the had perfect corellation
+
+#'So next we are going to calculate our residuals
+est = predict(fit,newdata=data.frame(x))
+err = resid(fit)
+
+#'Plotting residuals will be a more accurate presentation of our model
+plot(x,y,xlab='Weight (1000lb)',ylab='MPG')
+segments(x,y,x,est, col="darkgreen", lwd = 2)
+abline(fit,col="red")
+points(x,est, col="blue", pch=3)
+#'Note: What we call "residuals" is the numerical distance between values, in this case let it be xi our values and xmi our model's values
+#'that being said our residuals can be calculated, for example x1-xm1, x2-xm2, x3-xm3,...xi-xmi
+
+#' Now we can calculate the deviation of our residuals
+summary(fit)$sigma
+
+#'Or with
+n = length(x)
+sqrt( sum(resid(fit)^2) / (n-2) )
+
+#'And at the end we are summarizing our model so we can present an alternative version of our plot
+summary(fit)
